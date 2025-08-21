@@ -8,6 +8,10 @@ ODOO_USER="odoo"
 ODOO_HOME="/opt/odoo"
 ODOO_CONF="/etc/odoo.conf"
 ODOO_PORT="8069"
+ODOO_DB_PORT="5432"
+ODOO_DB_HOST="localhost"
+ODOO_DB_NAME="studiomaggio"
+ODOO_DB_PASSWORD="odoo"
 PG_VERSION="16"
 
 echo "Updating system..."
@@ -38,6 +42,8 @@ sudo -u $ODOO_USER python3 -m venv $ODOO_HOME/venv
 echo "Installing Python requirements..."
 sudo -u $ODOO_USER $ODOO_HOME/venv/bin/pip install wheel
 sudo -u $ODOO_USER $ODOO_HOME/venv/bin/pip install -r $ODOO_HOME/requirements.txt
+sudo -u $ODOO_USER $ODOO_HOME/venv/bin/pip install rl-renderPM
+
 
 echo "Installing wkhtmltopdf..."
 sudo apt install -y wkhtmltopdf
@@ -47,11 +53,11 @@ sudo tee $ODOO_CONF > /dev/null <<EOF
 [options]
 ; This is the Odoo configuration file
 admin_passwd = admin
-db_host = False
-db_port = False
+db_host = $ODOO_DB_HOST
+db_port = $ODOO_DB_PORT
 db_user = $ODOO_USER
-db_password = False
-addons_path = $ODOO_HOME/addons
+db_password = $ODOO_DB_PASSWORD
+addons_path = $ODOO_HOME/addons,$ODOO_HOME/customs/addons
 logfile = /var/log/odoo/odoo.log
 xmlrpc_port = $ODOO_PORT
 EOF
@@ -77,6 +83,8 @@ User=$ODOO_USER
 Group=$ODOO_USER
 ExecStart=$ODOO_HOME/venv/bin/python3 $ODOO_HOME/odoo-bin -c $ODOO_CONF
 StandardOutput=journal+console
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
