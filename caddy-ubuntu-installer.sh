@@ -1,10 +1,8 @@
 #!/bin/bash
-set -e
-
+# Caddy Installer for Ubuntu 24.04
 # Update package list and install dependencies
 sudo apt update && apt upgrade -y
 sudo apt install gnupg curl apt-transport-https debian-keyring debian-archive-keyring -y
-
 # Import Caddy GPG key and add repository
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 
