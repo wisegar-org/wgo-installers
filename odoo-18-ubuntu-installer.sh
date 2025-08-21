@@ -17,6 +17,38 @@ ODOO_DB_NAME=$ODOO_PROJECT
 ODOO_DB_PASSWORD="odoo"
 PG_VERSION="16"
 
+# Install prerequisites
+sudo apt update
+sudo apt install -y wget gnupg2 lsb-release
+
+# Add PostgreSQL APT repository
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+
+# Install PostgreSQL
+sudo apt update
+sudo apt install -y postgresql-$PG_VERSION
+
+# Change postgres user password to 'postgres'
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+
+# Create user 'odoo' with password 'odoo'
+sudo -u postgres psql -c "CREATE USER $ODOO_USER WITH PASSWORD '$ODOO_DB_PASSWORD';"
+
+# Configure PostgreSQL to listen on all interfaces
+sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/;s/^listen_addresses = 'localhost'/listen_addresses = '*'/;" /etc/postgresql/16/main/postgresql.conf
+
+# Allow remote connections in pg_hba.conf
+echo "host    all             all             0.0.0.0/0               md5" | sudo tee -a /etc/postgresql/16/main/pg_hba.conf
+echo "host    all             all             ::/0                    md5" | sudo tee -a /etc/postgresql/16/main/pg_hba.conf
+
+# Restart PostgreSQL to apply changes
+sudo systemctl restart postgresql
+
+echo "PostgreSQL 16 installed, 'postgres' and 'odoo' users configured, and remote access enabled."
+
+# ---------------------------------------------------------------------------------
+echo "Installing Odoo $ODOO_VERSION..."
 echo "Updating system..."
 sudo apt update && sudo apt upgrade -y
 
@@ -26,12 +58,6 @@ sudo apt install -y python3 python3-pip python3-venv build-essential wget git \
     libjpeg-dev libpq-dev libffi-dev libssl-dev libmysqlclient-dev \
     nodejs npm libjpeg8-dev liblcms2-dev libblas-dev libatlas-base-dev \
     libwebp-dev libharfbuzz-dev libfribidi-dev libtiff5-dev libopenjp2-7-dev
-
-echo "Installing PostgreSQL..."
-sudo apt install -y postgresql-$PG_VERSION
-
-echo "Creating Odoo PostgreSQL user..."
-sudo -u postgres createuser --createdb --username postgres --no-createrole --no-superuser $ODOO_USER || true
 
 echo "Creating Odoo system user..."
 sudo adduser --system --home=$ODOO_HOME --group $ODOO_USER || true
@@ -46,7 +72,6 @@ echo "Installing Python requirements..."
 sudo -u $ODOO_USER $ODOO_HOME/venv/bin/pip install wheel
 sudo -u $ODOO_USER $ODOO_HOME/venv/bin/pip install -r $ODOO_HOME/requirements.txt
 sudo -u $ODOO_USER $ODOO_HOME/venv/bin/pip install rl-renderPM
-
 
 echo "Installing wkhtmltopdf..."
 sudo apt install -y wkhtmltopdf
@@ -100,3 +125,38 @@ sudo systemctl start odoo
 
 echo "Odoo $ODOO_VERSION installation complete!"
 echo "Access Odoo at http://<your-server-ip>:$ODOO_PORT"
+
+# ---------------------------------------------------------------------------------
+# Caddy installation and configuration
+
+# Caddy Installer for Ubuntu 24.04
+# Update package list and install dependencies
+sudo apt update && apt upgrade -y
+sudo apt install gnupg curl apt-transport-https debian-keyring debian-archive-keyring -y
+# Import Caddy GPG key and add repository
+sudo curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+
+# Add Caddy repository to sources list
+wget -qO - https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt | sudo tee /etc/apt/sources.list.d/caddy.list
+
+# Install Caddy
+sudo apt update
+sudo apt install -y caddy
+
+# Configure Caddy as a reverse proxy to localhost:8069
+sudo bash -c 'cat > /etc/caddy/Caddyfile <<EOF
+:80 {
+    reverse_proxy localhost:8069
+}
+studiomaggio.wisegar.org {
+    tls info@wisegar.org
+    reverse_proxy localhost:8069
+}
+EOF'
+
+# Enable and start Caddy service
+sudo systemctl enable --now caddy
+sudo systemctl start caddy
+sudo systemctl status caddy
+
+echo "Caddy installed, configured as reverse proxy to localhost:8069, and running via systemd."
