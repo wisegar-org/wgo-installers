@@ -2,7 +2,7 @@
 # Odoo 18 Installer for Ubuntu 24.04
 
 set -e
-
+ODOO_PROJECT="studiomaggio"
 ODOO_VERSION="18.0"
 ODOO_USER="odoo"
 ODOO_HOME="/opt/odoo"
@@ -10,7 +10,7 @@ ODOO_CONF="/etc/odoo.conf"
 ODOO_PORT="8069"
 ODOO_DB_PORT="5432"
 ODOO_DB_HOST="localhost"
-ODOO_DB_NAME="studiomaggio"
+ODOO_DB_NAME=$ODOO_PROJECT
 ODOO_DB_PASSWORD="odoo"
 PG_VERSION="16"
 
