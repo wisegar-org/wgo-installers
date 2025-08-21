@@ -5,7 +5,10 @@ set -e
 ODOO_PROJECT="studiomaggio"
 ODOO_VERSION="18.0"
 ODOO_USER="odoo"
+# Define paths and variables
 ODOO_HOME="/opt/odoo"
+ODOO_CUSTOMS="$ODOO_HOME/customs"
+ODOO_ADDONS="$ODOO_HOME/addons"
 ODOO_CONF="/etc/odoo.conf"
 ODOO_PORT="8069"
 ODOO_DB_PORT="5432"
