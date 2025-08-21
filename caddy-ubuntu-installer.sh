@@ -4,7 +4,7 @@
 sudo apt update && apt upgrade -y
 sudo apt install gnupg curl apt-transport-https debian-keyring debian-archive-keyring -y
 # Import Caddy GPG key and add repository
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+sudo curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 
 # Add Caddy repository to sources list
 wget -qO - https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt | sudo tee /etc/apt/sources.list.d/caddy.list
