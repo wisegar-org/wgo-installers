@@ -2,10 +2,8 @@
 # Odoo 18 Installer for Ubuntu 24.04
 
 set -e
-ODOO_PROJECT="studiomaggio"
 ODOO_VERSION="18.0"
 ODOO_USER="odoo"
-# Define paths and variables
 ODOO_HOME="/opt/odoo"
 ODOO_CUSTOMS="$ODOO_HOME/customs"
 ODOO_ADDONS="$ODOO_HOME/addons"
@@ -13,9 +11,10 @@ ODOO_CONF="/etc/odoo.conf"
 ODOO_PORT="8069"
 ODOO_DB_PORT="5432"
 ODOO_DB_HOST="localhost"
-ODOO_DB_NAME=$ODOO_PROJECT
+ODOO_DB_NAME="odoo"
 ODOO_DB_PASSWORD="odoo"
 PG_VERSION="16"
+PG_PASSWORD="postgres"
 
 # Install prerequisites
 sudo apt update
@@ -30,10 +29,13 @@ sudo apt update
 sudo apt install -y postgresql-$PG_VERSION
 
 # Change postgres user password to 'postgres'
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';"
 
 # Create user 'odoo' with password 'odoo'
 sudo -u postgres psql -c "CREATE USER $ODOO_USER WITH PASSWORD '$ODOO_DB_PASSWORD';"
+
+# Create database 'odoo' owned by 'odoo' user
+sudo -u postgres psql -U postgres -c "CREATE DATABASE odoo OWNER odoo;"
 
 # Configure PostgreSQL to listen on all interfaces
 sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/;s/^listen_addresses = 'localhost'/listen_addresses = '*'/;" /etc/postgresql/16/main/postgresql.conf
@@ -85,6 +87,7 @@ db_host = $ODOO_DB_HOST
 db_port = $ODOO_DB_PORT
 db_user = $ODOO_USER
 db_password = $ODOO_DB_PASSWORD
+db_name = $ODOO_DB_NAME
 addons_path = $ODOO_HOME/addons,$ODOO_HOME/customs/addons
 logfile = /var/log/odoo/odoo.log
 xmlrpc_port = $ODOO_PORT
@@ -95,6 +98,9 @@ sudo chown $ODOO_USER:$ODOO_USER $ODOO_CONF
 echo "Creating log directory..."
 sudo mkdir -p /var/log/odoo
 sudo chown $ODOO_USER:$ODOO_USER /var/log/odoo
+
+echo "Creating custom addons directory..."
+sudo mkdir -p $ODOO_HOME/customs/addons
 
 echo "Creating systemd service..."
 sudo tee /etc/systemd/system/odoo.service > /dev/null <<EOF
@@ -145,9 +151,6 @@ sudo apt install -y caddy
 
 # Configure Caddy as a reverse proxy to localhost:8069
 sudo bash -c 'cat > /etc/caddy/Caddyfile <<EOF
-:80 {
-    reverse_proxy localhost:8069
-}
 studiomaggio.wisegar.org {
     tls info@wisegar.org
     reverse_proxy localhost:8069
