@@ -1,5 +1,13 @@
 #!/bin/bash
 set -e
+PG_VERSION="16"
+PG_PASSWORD=$1
+PG_USER=$2
+PG_USER_PASSWORD=$3
+echo "PG_PASSWORD: $PG_PASSWORD"
+echo "$PG_PASSWORD: $1"
+echo "$PG_USER: $2"
+echo "$PG_USER_PASSWORD: $3"
 
 # Install prerequisites
 sudo apt update
@@ -9,15 +17,15 @@ sudo apt install -y wget gnupg2 lsb-release
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
 echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
 
-# Install PostgreSQL 16
+# Install PostgreSQL
 sudo apt update
-sudo apt install -y postgresql-16
+sudo apt install -y postgresql-$PG_VERSION
 
 # Change postgres user password to 'postgres'
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';"
 
-# Create user 'odoo' with password 'odoo'
-sudo -u postgres psql -c "CREATE USER odoo WITH PASSWORD 'odoo';"
+# Create custom user with password
+sudo -u postgres psql -c "CREATE USER $PG_USER WITH PASSWORD '$PG_USER_PASSWORD';"
 
 # Configure PostgreSQL to listen on all interfaces
 sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/;s/^listen_addresses = 'localhost'/listen_addresses = '*'/;" /etc/postgresql/16/main/postgresql.conf
@@ -29,4 +37,4 @@ echo "host    all             all             ::/0                    md5" | sud
 # Restart PostgreSQL to apply changes
 sudo systemctl restart postgresql
 
-echo "PostgreSQL 16 installed, 'postgres' and 'odoo' users configured, and remote access enabled."
+echo "PostgreSQL $PG_VERSION installed, 'postgres' and '$PG_USER' users configured, and remote access enabled."
