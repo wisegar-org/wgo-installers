@@ -4,10 +4,10 @@ PG_VERSION="16"
 PG_PASSWORD=$1
 PG_USER=$2
 PG_USER_PASSWORD=$3
-echo "PG_PASSWORD: $PG_PASSWORD"
-echo "$PG_PASSWORD: $1"
-echo "$PG_USER: $2"
-echo "$PG_USER_PASSWORD: $3"
+echo "PG_VERSION: $PG_VERSION"
+echo "PG_PASSWORD: $1"
+echo "PG_USER: $2"
+echo "PG_USER_PASSWORD: $3"
 
 # Install prerequisites
 sudo apt update
