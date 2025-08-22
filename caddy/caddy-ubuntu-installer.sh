@@ -5,7 +5,9 @@ if [ -z "$1" ]; then
     echo "Usage: $0 <caddy_reverse_proxy_url>"
     exit 1
 fi
+
 echo "CADDY_REVERSE_URL: $1"
+
 # Caddy Installer for Ubuntu 24.04
 # Update package list and install dependencies
 sudo apt update && apt upgrade -y
