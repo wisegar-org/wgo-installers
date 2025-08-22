@@ -4,6 +4,10 @@ PG_VERSION="16"
 PG_PASSWORD=$1
 PG_USER=$2
 PG_USER_PASSWORD=$3
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Usage: $0 <postgres_password> <custom_user> <custom_user_password>"
+    exit 1
+fi
 echo "PG_VERSION: $PG_VERSION"
 echo "PG_PASSWORD: $1"
 echo "PG_USER: $2"
