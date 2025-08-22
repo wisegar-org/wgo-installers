@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-echo "CADDY_REVERSE_URL: $1"
+echo "CADDY_REVERSE_URL: $CADDY_REVERSE_URL"
 
 # Caddy Installer for Ubuntu 24.04
 # Update package list and install dependencies
@@ -23,7 +23,7 @@ sudo apt update
 sudo apt install -y caddy
 
 # Configure Caddy as a reverse proxy to localhost:8069
-sudo tee /etc/caddy/Caddyfile2 > /dev/null <<EOF
+sudo tee /etc/caddy/Caddyfile > /dev/null <<EOF
 $CADDY_REVERSE_URL {
     tls info@wisegar.org
     reverse_proxy localhost:8069
