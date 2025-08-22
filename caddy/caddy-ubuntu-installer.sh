@@ -20,12 +20,12 @@ sudo apt update
 sudo apt install -y caddy
 
 # Configure Caddy as a reverse proxy to localhost:8069
-sudo bash -c 'cat > /etc/caddy/Caddyfile <<EOF
+sudo tee /etc/caddy/Caddyfile > /dev/null <<EOF
 $CADDY_REVERSE_URL {
     tls info@wisegar.org
     reverse_proxy localhost:8069
 }
-EOF'
+EOF
 
 # Enable and start Caddy service
 sudo systemctl enable --now caddy
