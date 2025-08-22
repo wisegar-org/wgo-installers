@@ -26,7 +26,7 @@ echo "ODOO_PORT: $ODOO_PORT"
 echo "PG_ADMIN_PASSWORD: $PG_ADMIN_PASSWORD"
 # Install PostgreSQL and create Odoo database user
 cd ./postgres
-sudo sh postgres-ubuntu-installer.sh "$PG_PASSWORD" "$ODOO_USER" "$ODOO_DB_PASSWORD"
+sudo sh postgres-ubuntu-installer.sh $PG_PASSWORD $ODOO_USER $ODOO_DB_PASSWORD
 cd ../odoo
 sudo sh odoo-ubuntu-installer.sh "$ODOO_USER" "$ODOO_DB_NAME" "$ODOO_DB_PASSWORD" "$ODOO_PORT"
 cd ../caddy
