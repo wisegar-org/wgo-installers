@@ -1,6 +1,7 @@
 #!/bin/bash
 # Odoo 18 Installer for Ubuntu 24.04
 set -e
+BLUE='\033[0;34m'
 ODOO_VERSION="18.0"
 ODOO_USER=$1
 ODOO_HOME="/opt/odoo"
@@ -24,14 +25,16 @@ echo "ODOO_DB_NAME: $ODOO_DB_NAME"
 echo "ODOO_DB_PASSWORD: $ODOO_DB_PASSWORD"
 echo "ODOO_PORT: $ODOO_PORT"
 echo "PG_ADMIN_PASSWORD: $PG_ADMIN_PASSWORD"
-# Install PostgreSQL and create Odoo database user
+echo -e "${BLUE}Install PostgreSQL and create Odoo database user"
 cd ./postgres
 sudo sh postgres-ubuntu-installer.sh "$PG_ADMIN_PASSWORD" "$ODOO_USER" "$ODOO_DB_PASSWORD"
+echo -e "${BLUE}Install ODOO"
 cd ../odoo
 sudo sh odoo-ubuntu-installer.sh "$ODOO_USER" "$ODOO_DB_NAME" "$ODOO_DB_PASSWORD" "$ODOO_PORT"
+echo -e "${BLUE}Install CADDY"
 cd ../caddy
 sudo sh caddy-ubuntu-installer.sh "$ODOO_URL"
 cd ..
-echo "Odoo $ODOO_VERSION installation completed."
+echo "${BLUE}Odoo $ODOO_VERSION installation completed."
 
 
