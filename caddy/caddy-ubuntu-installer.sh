@@ -31,9 +31,14 @@ $CADDY_REVERSE_URL {
 }
 EOF
 
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw reload
+
 # Enable and start Caddy service
 sudo systemctl enable --now caddy
 sudo systemctl start caddy
 sudo systemctl status caddy
+
 
 echo "Caddy installed, configured as reverse proxy to localhost:8069, and running via systemd."

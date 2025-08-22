@@ -34,6 +34,10 @@ sudo sh odoo-ubuntu-installer.sh "$ODOO_USER" "$ODOO_DB_NAME" "$ODOO_DB_PASSWORD
 echo -e "${BLUE}Install CADDY"
 cd ../caddy
 sudo sh caddy-ubuntu-installer.sh "$ODOO_URL"
+
+sudo ufw allow $ODOO_PORT
+sudo ufw reload
+
 cd ..
 echo "${BLUE}Odoo $ODOO_VERSION installation completed."
 
