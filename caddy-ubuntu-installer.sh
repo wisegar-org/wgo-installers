@@ -2,7 +2,7 @@
 set -e
 CADDY_REVERSE_URL=$1
 CADDY_REVERSE_PORT=$2
-if [ -z "$1" ] || [ -z "$0" ];; then
+if [ -z "$1" ] || [ -z "$0" ]; then
     echo "Usage: $0 <caddy_reverse_proxy_url> <caddy_reverse_proxy_port>"
     exit 1
 fi
