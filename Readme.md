@@ -12,6 +12,9 @@ Scripts to automate software installations on linux servers.
 
 - Execute caddy script with sudo permisions with params
 
+    <$CADDY_REVERSE_URL> - Ex: dominio.com
+    <$CADDY_REVERSE_PORT> - Ex: 8069
+
 ```bash
     sudo sh caddy-ubuntu-installer.sh <$CADDY_REVERSE_URL> <$CADDY_REVERSE_PORT>
 ```
