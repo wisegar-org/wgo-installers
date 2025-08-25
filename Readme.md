@@ -18,3 +18,20 @@ Scripts to automate software installations on linux servers.
 ```bash
     sudo sh caddy-ubuntu-installer.sh <$CADDY_REVERSE_URL> <$CADDY_REVERSE_PORT>
 ```
+
+## Install Postgres
+
+- Download postgres installer script from github
+
+```bash
+    wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/postgres-ubuntu-installer.sh
+```
+
+- Execute postgres script with sudo permisions with params
+
+  - <$PG_VERSION> - Ex: 16
+  - <$PG_PASSWORD> - Ex: StrongPassword
+
+```bash
+    sudo sh postgres-ubuntu-installer.sh <$PG_VERSION> <$PG_PASSWORD>
+```
