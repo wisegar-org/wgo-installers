@@ -1,17 +1,13 @@
 #!/bin/bash
 set -e
-PG_VERSION="16"
-PG_PASSWORD=$1
-PG_USER=$2
-PG_USER_PASSWORD=$3
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-    echo "Usage: $0 <postgres_password> <custom_user> <custom_user_password>"
+PG_VERSION=$1
+PG_PASSWORD=$2
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: $0 <postgres_version> <postgres_password>"
     exit 1
 fi
 echo "PG_VERSION: $PG_VERSION"
-echo "PG_PASSWORD: $1"
-echo "PG_USER: $2"
-echo "PG_USER_PASSWORD: $3"
+echo "PG_PASSWORD: $PG_PASSWORD"
 
 # Install prerequisites
 sudo apt update
@@ -28,8 +24,8 @@ sudo apt install -y postgresql-$PG_VERSION
 # Change postgres user password to 'postgres'
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';"
 
-# Create custom user with password
-sudo -u postgres psql -c "CREATE USER $PG_USER WITH PASSWORD '$PG_USER_PASSWORD';"
+# # Create custom user with password
+# sudo -u postgres psql -c "CREATE USER $PG_USER WITH PASSWORD '$PG_USER_PASSWORD';"
 
 # Configure PostgreSQL to listen on all interfaces
 sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/;s/^listen_addresses = 'localhost'/listen_addresses = '*'/;" /etc/postgresql/16/main/postgresql.conf
@@ -38,7 +34,11 @@ sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/;s/^liste
 echo "host    all             all             0.0.0.0/0               md5" | sudo tee -a /etc/postgresql/16/main/pg_hba.conf
 echo "host    all             all             ::/0                    md5" | sudo tee -a /etc/postgresql/16/main/pg_hba.conf
 
+sudo ufw allow 5432
+sudo ufw enable
+sudo ufw reload
+
 # Restart PostgreSQL to apply changes
 sudo systemctl restart postgresql
 
-echo "PostgreSQL $PG_VERSION installed, 'postgres' and '$PG_USER' users configured, and remote access enabled."
+echo "PostgreSQL $PG_VERSION installed, 'postgres' user configured, and remote access enabled."
