@@ -1,12 +1,14 @@
 #!/bin/bash
 set -e
 CADDY_REVERSE_URL=$1
-if [ -z "$1" ]; then
-    echo "Usage: $0 <caddy_reverse_proxy_url>"
+CADDY_REVERSE_PORT=$2
+if [ -z "$1" ] || [ -z "$0" ];; then
+    echo "Usage: $0 <caddy_reverse_proxy_url> <caddy_reverse_proxy_port>"
     exit 1
 fi
 
 echo "CADDY_REVERSE_URL: $CADDY_REVERSE_URL"
+echo "CADDY_REVERSE_PORT: $CADDY_REVERSE_PORT"
 
 # Caddy Installer for Ubuntu 24.04
 # Update package list and install dependencies
@@ -27,18 +29,18 @@ sudo mv /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak
 sudo tee /etc/caddy/Caddyfile > /dev/null <<EOF
 $CADDY_REVERSE_URL {
     tls info@wisegar.org
-    reverse_proxy localhost:8069
+    reverse_proxy localhost:$CADDY_REVERSE_PORT
 }
 EOF
 
 sudo ufw allow 80
 sudo ufw allow 443
+sudo ufw enable
 sudo ufw reload
 
 # Enable and start Caddy service
 sudo systemctl enable --now caddy
 sudo systemctl start caddy
 sudo systemctl status caddy
-
 
 echo "Caddy installed, configured as reverse proxy to localhost:8069, and running via systemd."

@@ -1,9 +1,17 @@
 # SCRIPT AUTOMATION REPOSITORY
 
-Download an script file from linux server using:
+Scripts to automate software installations on linux servers.
 
-- wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/branch/path-to-file
+## Install Caddy
 
-Execute on linux server using
+- Download caddy installer script from github
 
-- sudo sh filename
+```bash
+    wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/caddy-ubuntu-installer.sh
+```
+
+- Execute caddy script with sudo permisions with params
+
+```bash
+    sudo sh caddy-ubuntu-installer.sh <$CADDY_REVERSE_URL> <$CADDY_REVERSE_PORT>
+```
