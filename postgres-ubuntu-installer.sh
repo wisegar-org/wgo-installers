@@ -34,6 +34,7 @@ sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/;s/^liste
 echo "host    all             all             0.0.0.0/0               md5" | sudo tee -a /etc/postgresql/16/main/pg_hba.conf
 echo "host    all             all             ::/0                    md5" | sudo tee -a /etc/postgresql/16/main/pg_hba.conf
 
+sudo ufw allow 22
 sudo ufw allow 5432
 sudo ufw enable
 sudo ufw reload

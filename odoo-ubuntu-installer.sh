@@ -106,6 +106,11 @@ RestartSec=5s
 WantedBy=multi-user.target
 EOF
 
+sudo ufw allow 22
+sudo ufw allow $ODOO_PORT
+sudo ufw enable
+sudo ufw reload
+
 echo "Reloading systemd and starting Odoo..."
 sudo systemctl daemon-reload
 sudo systemctl enable odoo
