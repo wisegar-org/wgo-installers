@@ -35,3 +35,22 @@ Scripts to automate software installations on linux servers.
 ```bash
     sudo sh postgres-ubuntu-installer.sh <$PG_VERSION> <$PG_PASSWORD>
 ```
+
+## Install Odoo 18.0
+
+- Download odoo installer script from github
+
+```bash
+    wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/odoo-ubuntu-installer.sh
+```
+
+- Execute odoo script with sudo permisions with params
+
+  - <$ODOO_USER> - Ex: odoo
+  - <$ODOO_DB_NAME> - Ex: mydatabase
+  - <$ODOO_DB_PASSWORD> - Ex: StrongPassword
+  - <$ODOO_PORT> - Ex: 8069
+
+```bash
+    sudo sh odoo-ubuntu-installer.sh <$ODOO_USER> <$ODOO_DB_NAME> <$ODOO_DB_PASSWORD> <$ODOO_PORT>
+```
