@@ -40,11 +40,8 @@ sudo adduser --system --home=$ODOO_HOME --group $ODOO_USER || true
 
 echo DB User and DB Creation for Odoo 
 echo  Create custom $ODOO_USER with password
-sudo -u postgres psql -c "CREATE USER $ODOO_USER WITH PASSWORD '$ODOO_DB_PASSWORD';"
-# echo  Create database $ODOO_DB_NAME
-# sudo -u postgres psql -c "CREATE DATABASE $ODOO_DB_NAME;';"
-# echo  Update database permissions for user and $ODOO_USER database $ODOO_DB_NAME
-# sudo -u postgres psql -c "CREATE DATABASE $ODOO_DB_NAME;';"
+sudo -u postgres psql -c "CREATE USER $ODOO_USER WITH ENCRYPTED  PASSWORD '$ODOO_DB_PASSWORD';"
+sudo -u postgres psql -c "ALTER USER $ODOO_USER WITH SUPERUSER;"
 
 echo "Cloning Odoo $ODOO_VERSION..."
 sudo git clone --depth 1 --branch $ODOO_VERSION https://github.com/odoo/odoo.git $ODOO_HOME
