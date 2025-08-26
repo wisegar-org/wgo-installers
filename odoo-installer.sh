@@ -28,12 +28,15 @@ echo "ODOO_URL: $ODOO_URL"
 
 echo #---------------------------------------------------------------------------------
 echo "Install PostgreSQL and create Odoo database user"
+wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/postgres-ubuntu-installer.sh
 sudo sh postgres-ubuntu-installer.sh "$PG_ADMIN_PASSWORD" "$ODOO_USER" "$ODOO_DB_PASSWORD"
 echo #---------------------------------------------------------------------------------
 echo "Install ODOO"
+wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/odoo-ubuntu-installer.sh
 sudo sh odoo-ubuntu-installer.sh "$ODOO_USER" "$ODOO_DB_NAME" "$ODOO_DB_PASSWORD" "$ODOO_PORT"
 echo #---------------------------------------------------------------------------------
 echo "Install CADDY"
+wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/caddy-ubuntu-installer.sh
 sudo sh caddy-ubuntu-installer.sh "$ODOO_URL" "$ODOO_PORT"
 echo #--------------------------------------------------------------------------------- 
 echo "Odoo $ODOO_VERSION installation completed."
