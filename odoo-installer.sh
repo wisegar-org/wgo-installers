@@ -29,7 +29,7 @@ echo "ODOO_URL: $ODOO_URL"
 echo #---------------------------------------------------------------------------------
 echo "Install PostgreSQL and create Odoo database user"
 wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/postgres-ubuntu-installer.sh
-sudo sh postgres-ubuntu-installer.sh "16" "$PG_ADMIN_PASSWORD"
+sudo sh postgres-ubuntu-installer.sh 16 "$PG_ADMIN_PASSWORD"
 echo #---------------------------------------------------------------------------------
 echo "Install ODOO"
 wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/odoo-ubuntu-installer.sh
