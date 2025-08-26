@@ -38,7 +38,7 @@ sudo apt install -y python3 python3-pip python3-venv build-essential wget git \
 echo "Creating Odoo system user..."
 sudo adduser --system --home=$ODOO_HOME --group $ODOO_USER || true
 
-@ DB User and DB Creation for Odoo 
+echo DB User and DB Creation for Odoo 
 echo  Create custom $ODOO_USER with password
 sudo -u postgres psql -c "CREATE USER $ODOO_USER WITH PASSWORD '$ODOO_DB_PASSWORD';"
 echo  Create database $ODOO_DB_NAME
