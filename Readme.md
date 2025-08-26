@@ -73,5 +73,5 @@ Scripts to automate software installations on linux servers.
   - <$ODOO_URL> - Ex. domonio.com
 
 ```bash
-    sudo sh odoo-installer.sh <$ODOO_USER> <$ODOO_DB_NAME> <$ODOO_DB_PASSWORD> <$ODOO_PORT> <$PG_ADMIN_PASSWORD> <$ODOO_URL>
+    sudo sh odoo-installer.sh <$ODOO_USER> <$ODOO_DB_NAME> <$ODOO_DB_PASSWORD> <$ODOO_PORT> <$PG_VERSION> <$PG_ADMIN_PASSWORD> <$ODOO_URL>
 ```

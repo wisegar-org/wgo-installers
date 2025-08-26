@@ -12,24 +12,32 @@ ODOO_DB_HOST="localhost"
 ODOO_DB_NAME=$2
 ODOO_DB_PASSWORD=$3
 ODOO_PORT=$4
-PG_ADMIN_PASSWORD=$5
-ODOO_URL=$6
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ]; then
+PG_VERSION=$5
+PG_ADMIN_PASSWORD=$6
+ODOO_URL=$7
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ]; then
     echo "Usage: $0 <odoo_user> <odoo_db_name> <odoo_db_password> <odoo_port> <postgres_password> <odoo_url>"
     exit 1
 fi
 echo "ODOO_VERSION: $ODOO_VERSION"
 echo "ODOO_USER: $ODOO_USER"
+echo "ODOO_HOME: $ODOO_HOME"
+echo "ODOO_CUSTOMS: $ODOO_CUSTOMS"
+echo "ODOO_ADDONS: $ODOO_ADDONS"
+echo "ODOO_CONF: $ODOO_CONF"
+echo "ODOO_DB_HOST: $ODOO_DB_HOST"
+echo "ODOO_DB_PORT: $ODOO_DB_PORT"
 echo "ODOO_DB_NAME: $ODOO_DB_NAME"
 echo "ODOO_DB_PASSWORD: $ODOO_DB_PASSWORD"
 echo "ODOO_PORT: $ODOO_PORT"
+echo "PG_VERSION: $PG_VERSION"
 echo "PG_ADMIN_PASSWORD: $PG_ADMIN_PASSWORD"
 echo "ODOO_URL: $ODOO_URL"
 
 echo #---------------------------------------------------------------------------------
 echo "Install PostgreSQL and create Odoo database user"
 wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/postgres-ubuntu-installer.sh
-sudo sh postgres-ubuntu-installer.sh 16 "$PG_ADMIN_PASSWORD"
+sudo sh postgres-ubuntu-installer.sh "$PG_VERSION" "$PG_ADMIN_PASSWORD"
 echo #---------------------------------------------------------------------------------
 echo "Install ODOO"
 wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/odoo-ubuntu-installer.sh
