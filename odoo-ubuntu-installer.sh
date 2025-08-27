@@ -90,7 +90,7 @@ echo "Creating custom addons directory..."
 sudo mkdir -p $ODOO_HOME/customs/addons
 
 echo "Creating systemd service..."
-sudo tee /etc/systemd/system/odoo.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/odoo$ODOO_INSTALL_NAME.service > /dev/null <<EOF
 [Unit]
 Description=Odoo ERP Service - $ODOO_INSTALL_NAME
 Requires=postgresql.service
