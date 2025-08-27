@@ -3,18 +3,19 @@
 set -e
 ODOO_VERSION="18.0"
 ODOO_USER=$1
-ODOO_HOME="/opt/odoo"
+ODOO_HOME="/opt/odoo/$ODOO_INSTALL_NAME"
 ODOO_CUSTOMS="$ODOO_HOME/customs"
 ODOO_ADDONS="$ODOO_HOME/addons"
-ODOO_CONF="/etc/odoo.conf"
+ODOO_CONF="/etc/$ODOO_INSTALL_NAME-odoo.conf"
 ODOO_DB_PORT="5432"
 ODOO_DB_HOST="localhost"
 ODOO_DB_NAME=$2
 ODOO_DB_PASSWORD=$3
 ODOO_PORT=$4
+ODOO_INSTALL_NAME=$5
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ||  [ -z "$4" ] ; then
-    echo "Usage: $0 <odoo_user> <odoo_db_name> <odoo_db_password> <odoo_port>"
+    echo "Usage: $0 <odoo_user> <odoo_db_name> <odoo_db_password> <odoo_port> <installation name - optional>"
     exit 1
 fi
 echo "ODOO_VERSION: $ODOO_VERSION"
@@ -68,7 +69,7 @@ db_user = $ODOO_USER
 db_password = $ODOO_DB_PASSWORD
 db_name = False
 addons_path = $ODOO_HOME/addons,$ODOO_HOME/customs/addons
-logfile = /var/log/odoo/odoo.log
+logfile = /var/log/odoo/$ODOO_INSTALL_NAME-odoo.log
 xmlrpc_port = $ODOO_PORT
 EOF
 
@@ -84,7 +85,7 @@ sudo mkdir -p $ODOO_HOME/customs/addons
 echo "Creating systemd service..."
 sudo tee /etc/systemd/system/odoo.service > /dev/null <<EOF
 [Unit]
-Description=Odoo ERP
+Description=Odoo ERP Service - $ODOO_INSTALL_NAME
 Requires=postgresql.service
 After=network.target postgresql.service
 
