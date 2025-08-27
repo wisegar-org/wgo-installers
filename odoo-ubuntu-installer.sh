@@ -2,23 +2,30 @@
 # Odoo 18 Installer for Ubuntu 24.04
 set -e
 ODOO_VERSION="18.0"
-ODOO_USER=$1
+ODOO_INSTALL_NAME=$1
+ODOO_USER=$2
 ODOO_HOME="/opt/odoo/$ODOO_INSTALL_NAME"
 ODOO_CUSTOMS="$ODOO_HOME/customs"
 ODOO_ADDONS="$ODOO_HOME/addons"
 ODOO_CONF="/etc/$ODOO_INSTALL_NAME-odoo.conf"
 ODOO_DB_PORT="5432"
 ODOO_DB_HOST="localhost"
-ODOO_DB_NAME=$2
-ODOO_DB_PASSWORD=$3
-ODOO_PORT=$4
-ODOO_INSTALL_NAME=$5
+ODOO_DB_NAME=$3
+ODOO_DB_PASSWORD=$4
+ODOO_PORT=$5
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ||  [ -z "$4" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ||  [ -z "$4" ] ||  [ -z "$5" ] ; then
     echo "Usage: $0 <odoo_user> <odoo_db_name> <odoo_db_password> <odoo_port> <installation name - optional>"
     exit 1
 fi
 echo "ODOO_VERSION: $ODOO_VERSION"
+echo "ODOO_INSTALL_NAME: $ODOO_INSTALL_NAME"
+echo "ODOO_HOME: $ODOO_HOME"
+echo "ODOO_CUSTOMS: $ODOO_CUSTOMS"
+echo "ODOO_ADDONS: $ODOO_ADDONS"
+echo "ODOO_CONF: $ODOO_CONF"
+echo "ODOO_DB_PORT: $ODOO_DB_PORT"
+echo "ODOO_DB_HOST: $ODOO_DB_HOST"
 echo "ODOO_USER: $ODOO_USER"
 echo "ODOO_DB_NAME: $ODOO_DB_NAME"
 echo "ODOO_DB_PASSWORD: $ODOO_DB_PASSWORD"
