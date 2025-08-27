@@ -46,14 +46,14 @@ Scripts to automate software installations on linux servers.
 
 - Execute odoo script with sudo permisions with params
 
+  - <$ODOO_INSTALL_NAME> - Ex: nomecliente
   - <$ODOO_USER> - Ex: odoo
   - <$ODOO_DB_NAME> - Ex: mydatabase
   - <$ODOO_DB_PASSWORD> - Ex: StrongPassword
   - <$ODOO_PORT> - Ex: 8069
-  - <$ODOO_INSTALL_NAME> - Ex: nomecliente
 
 ```bash
-    sudo sh odoo-ubuntu-installer.sh <$ODOO_USER> <$ODOO_DB_NAME> <$ODOO_DB_PASSWORD> <$ODOO_PORT> <$ODOO_INSTALL_NAME>
+    sudo sh odoo-ubuntu-installer.sh <$ODOO_INSTALL_NAME> <$ODOO_USER> <$ODOO_DB_NAME> <$ODOO_DB_PASSWORD> <$ODOO_PORT> 
 ```
 
 ## Install Odoo 18.0 with postgres and caddy reverse proxy
