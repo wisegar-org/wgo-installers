@@ -118,8 +118,8 @@ sudo ufw reload
 
 echo "Reloading systemd and starting Odoo..."
 sudo systemctl daemon-reload
-sudo systemctl enable odoo
-sudo systemctl start odoo
+sudo systemctl enable odoo$ODOO_INSTALL_NAME
+sudo systemctl start odoo$ODOO_INSTALL_NAME
 
 echo "Odoo $ODOO_VERSION installation complete!"
 echo "Access Odoo at http://<your-server-ip>:$ODOO_PORT"
