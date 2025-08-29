@@ -12,6 +12,10 @@ param(
     [int]$newport = 5434
 )
 
+# Redirect all output to a log file
+$logFile = "postgres-migrate-database.log"
+Start-Transcript -Path $logFile -Append
+
 # Ensure pgpass file exists
 function Write-Ensure-PgpassFile {
     $pgpassPath = "$env:APPDATA\PostgreSQL\pgpass.conf"
