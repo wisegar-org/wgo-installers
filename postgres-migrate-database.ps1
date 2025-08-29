@@ -2,6 +2,16 @@
 # postgres-migrate-database.ps1
 # Migrates a PostgreSQL database from version 12 to version 16
 
+[CmdletBinding()]
+param(
+    [string]$oldversion = "12",
+    [string]$newversion = "16",
+    [string]$server = "localhost",
+    [string]$username = "postgres",
+    [int]$oldport = 5432,
+    [int]$newport = 5434
+)
+Write-AllDatabase -OldVersion $oldversion -OldPort $oldport -NewVersion $newversion -NewPort $newport -Username $username -Server $server
 
 # Get the path to pg_restore for a specific PostgreSQL version
 function Get-PgRestorePath {
@@ -69,7 +79,6 @@ function Write-HostYellow {
 }
 
 function Write-NewPostgresDatabase {
-    [CmdletBinding()]
     param(
         [string]$OldVersion = "12",
         [int]$OldPort = 5432,
@@ -151,27 +160,31 @@ function Write-NewPostgresDatabase {
 
 
 # Get all databases from PostgreSQL 12
-$oldversion = "12"
-$newversion = "16"
-$server = "localhost"
-$username = "postgres"
-[int]$oldport = 5432
-[int]$newport = 5434
-$databases = &  Get-PsqlPath -Version $oldversion -w --host=$server -p $oldport --username=$username -tAc "SELECT datname FROM pg_database WHERE datistemplate = false; "
+function Write-AllDatabase {
+    param(
+        [string]$OldVersion = "12",
+        [int]$OldPort = 5432,
+        [string]$NewVersion = "16",
+        [int]$NewPort = 5434,
+        [string]$Username = "postgres",
+        [string]$Server = "localhost"
+    )
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Failed to retrieve databases from PostgreSQL 12."
-    exit 1
-}
+    $databases = & Get-PsqlPath -Version $OldVersion -w --host=$Server -p $OldPort --username=$Username -tAc "SELECT datname FROM pg_database WHERE datistemplate = false; "
 
-$databases = $databases -split "`n" | Where-Object { $_.Trim() -ne "" }
-
-foreach ($db in $databases) {
-    if ($db -eq "postgres" -or $db -eq "template0" -or $db -eq "template1") {
-        continue
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to retrieve databases from PostgreSQL $OldVersion."
+        exit 1
     }
-    Write-HostYellow "Migrating database: $db"
-    Write-NewPostgresDatabase -Database $db -OldVersion $oldversion -OldPort $oldport -NewVersion $newversion -NewPort $newport -Username $username -Server $server
+
+    $databases = $databases -split "`n" | Where-Object { $_.Trim() -ne "" }
+
+    foreach ($db in $databases) {
+        if ($db -eq "postgres" -or $db -eq "template0" -or $db -eq "template1") {
+            continue
+        }
+        Write-HostYellow "Migrating database: $db"
+        Write-NewPostgresDatabase -Database $db -OldVersion $OldVersion -OldPort $OldPort -NewVersion $NewVersion -NewPort $NewPort -Username $Username -Server $Server
+    }
+    Write-HostYellow "All databases migrated."
 }
-Write-HostYellow "All databases migrated."
-# Migrate-PostgresDatabase -Database "quickweb-development"
