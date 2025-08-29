@@ -15,7 +15,7 @@ ODOO_DB_PASSWORD=$4
 ODOO_PORT=$5
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ||  [ -z "$4" ] ||  [ -z "$5" ] ; then
-    echo "Usage: $0 <odoo_user> <odoo_db_name> <odoo_db_password> <odoo_port> <installation name - optional>"
+    echo "Usage: $0 <installation name> <odoo_user> <odoo_db_name> <odoo_db_password> <odoo_port>"
     exit 1
 fi
 echo "ODOO_VERSION: $ODOO_VERSION"
