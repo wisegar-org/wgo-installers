@@ -11,8 +11,17 @@ param(
     [int]$oldport = 5432,
     [int]$newport = 5434
 )
-Write-AllDatabase -OldVersion $oldversion -OldPort $oldport -NewVersion $newversion -NewPort $newport -Username $username -Server $server
 
+# Ensure pgpass file exists
+function Write-Ensure-PgpassFile {
+    $pgpassPath = "$env:APPDATA\PostgreSQL\pgpass.conf"
+    if (-not (Test-Path $pgpassPath)) {
+        New-Item -Path $pgpassPath -ItemType File -Force | Out-Null
+        Write-HostYellow "pgpass file created at $pgpassPath. Please edit it with your credentials."
+        Invoke-Item $pgpassPath
+        exit 0
+    }
+}
 # Get the path to pg_restore for a specific PostgreSQL version
 function Get-PgRestorePath {
     param(
@@ -80,19 +89,20 @@ function Write-HostYellow {
 
 function Write-NewPostgresDatabase {
     param(
-        [string]$OldVersion = "12",
-        [int]$OldPort = 5432,
-        [string]$NewVersion = "16",
-        [int]$NewPort = 5434,
-        [string]$Database = "quickweb-development",
-        [string]$Username = "postgres",
-        [string]$Server = "localhost",
+        [string]$OldVersion,
+        [int]$OldPort,
+        [string]$NewVersion,
+        [int]$NewPort,
+        [string]$Database,
+        [string]$Username,
+        [string]$Server,
         [string]$BackupFile = $Database + "_backup.dump"
     )
 
 
     Write-HostYellow "Dumping database '$Database' from PostgreSQL $OldVersion..."
-    & Get-PgDumpPath -Version $OldVersion `
+    $PgDumpPath = Get-PgDumpPath -Version $OldVersion
+    & $PgDumpPath `
         --host=$Server `
         -p $OldPort `
         -w `
@@ -141,7 +151,8 @@ function Write-NewPostgresDatabase {
     }
 
     Write-HostYellow "Restoring database '$Database' to PostgreSQL $NewVersion..."
-    &  Get-PgRestorePath -Version $NewVersion `
+    $PgRestorePath = Get-PgRestorePath -Version $NewVersion 
+    &  $PgRestorePath `
         --host=$Server `
         -p $NewPort `
         -w `
@@ -158,19 +169,21 @@ function Write-NewPostgresDatabase {
     }
 }
 
-
 # Get all databases from PostgreSQL 12
 function Write-AllDatabase {
     param(
-        [string]$OldVersion = "12",
-        [int]$OldPort = 5432,
-        [string]$NewVersion = "16",
-        [int]$NewPort = 5434,
-        [string]$Username = "postgres",
-        [string]$Server = "localhost"
+        [string]$OldVersion,
+        [int]$OldPort,
+        [string]$NewVersion,
+        [int]$NewPort,
+        [string]$Username,
+        [string]$Server
     )
 
-    $databases = & Get-PsqlPath -Version $OldVersion -w --host=$Server -p $OldPort --username=$Username -tAc "SELECT datname FROM pg_database WHERE datistemplate = false; "
+    # Write-HostYellow "Ensuring pgpass file exists..."
+    Write-Ensure-PgpassFile
+    $psqlPath = Get-PsqlPath -Version $OldVersion
+    $databases = &  $psqlPath -w --host=$Server -p $OldPort --username=$Username -tAc "SELECT datname FROM pg_database WHERE datistemplate = false; "
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to retrieve databases from PostgreSQL $OldVersion."
@@ -188,3 +201,5 @@ function Write-AllDatabase {
     }
     Write-HostYellow "All databases migrated."
 }
+
+Write-AllDatabase -OldVersion $oldversion -OldPort $oldport -NewVersion $newversion -NewPort $newport -Username $username -Server $server

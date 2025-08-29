@@ -76,3 +76,24 @@ Scripts to automate software installations on linux servers.
 ```bash
     sudo sh odoo-installer.sh <$ODOO_USER> <$ODOO_DB_NAME> <$ODOO_DB_PASSWORD> <$ODOO_PORT> <$PG_VERSION> <$PG_ADMIN_PASSWORD> <$ODOO_URL>
 ```
+
+## postgres-migrate-database.ps1
+
+- Scaricare script di migrazione databases tra due istanze postgres
+
+```bash
+    wget https://raw.githubusercontent.com/orionedp/quick-automation/postgres-migrate-database.ps1
+```
+
+- Eseguire lo script con parametri
+
+  - <$oldversion> - Ex: 12
+  - <$newversion> - Ex: 16
+  - <$server> - Ex: localhost
+  - <$username> - Ex: postgres
+  - <$oldport> - Ex: 5432
+  - <$newport> - Ex: 5434
+
+```bash
+    ./postgres-migrate-database.ps1 <$oldversion> <$newversion> <$server> <$username> <$oldport> <$newport>
+```
