@@ -82,7 +82,7 @@ Scripts to automate software installations on linux servers.
 - Scaricare script di migrazione databases tra due istanze postgres
 
 ```bash
-    wget https://raw.githubusercontent.com/orionedp/quick-automation/postgres-migrate-database.ps1
+    wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/postgres-migrate-database.ps1
 ```
 
 - Eseguire lo script con parametri
@@ -96,4 +96,18 @@ Scripts to automate software installations on linux servers.
 
 ```bash
     ./postgres-migrate-database.ps1 <$oldversion> <$newversion> <$server> <$username> <$oldport> <$newport>
+```
+
+## doocker-postgres-compose.yaml
+
+- Docker compose con Postgres v16 e PGAdmin
+
+```bash
+    wget https://raw.githubusercontent.com/wisegar-org/wgo-installers/main/docker-postgres-compose.yaml
+```
+
+- Modificare parametri dei volumi e authenticazione prima di eseguire
+
+```bash
+    docker compose -f .\docker-postgres-compose.yaml up -d
 ```
